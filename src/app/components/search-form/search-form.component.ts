@@ -27,14 +27,14 @@ export class SearchFormComponent {
   constructor(private fb: FormBuilder) {}
 
   ngOnInit() {
-    // this.searchForm = new FormGroup({
-    //   searchText: new FormControl(this.initialValues?.searchText || ''),
-    //   country: new FormControl(this.initialValues?.country || '')
-    // });
     this.searchForm = this.fb.group({
       searchText: [this.initialValues?.searchText || '', Validators.required],
       country: [this.initialValues?.country || '', Validators.required]
     });
+    // this.searchForm = new FormGroup({
+    //   searchText: new FormControl(this.initialValues?.searchText || ''),
+    //   country: new FormControl(this.initialValues?.country || '')
+    // });
   }
 
 
