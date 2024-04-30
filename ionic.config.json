@@ -1,0 +1,7 @@
+{
+  "name": "ais-app",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
