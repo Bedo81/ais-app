@@ -1,7 +1,7 @@
 <form [formGroup]="searchForm" (ngSubmit)="onSubmit()">
   <ion-item>
     <ion-label position="floating">Search</ion-label>
-    <ion-input formControlName="searchText" type="text"></ion-input>
+    <ion-input formControlName="searchText" type="text" clearInput></ion-input>
   </ion-item>
   <ion-item>
     <ion-label>Country</ion-label>
@@ -11,5 +11,5 @@
       </ion-select-option>
     </ion-select>
   </ion-item>
-  <ion-button expand="full" type="submit">Search</ion-button>
+  <ion-button expand="full" type="submit" [disabled]="!searchForm.valid">Search</ion-button>
 </form>

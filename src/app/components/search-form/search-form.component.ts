@@ -1,14 +1,14 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
+import { IonItem, IonLabel, IonInput, IonSelect, IonSelectOption, IonButton } from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-search-form',
   templateUrl: './search-form.component.html',
   styleUrls: ['./search-form.component.scss'],
   standalone: true,
-  imports: [IonicModule, ReactiveFormsModule, CommonModule]
+  imports: [IonItem, IonLabel, IonInput, IonSelect, IonSelectOption, IonButton, ReactiveFormsModule, CommonModule]
 })
 export class SearchFormComponent {
   @Input() initialValues: any;
@@ -32,8 +32,8 @@ export class SearchFormComponent {
     //   country: new FormControl(this.initialValues?.country || '')
     // });
     this.searchForm = this.fb.group({
-      searchText: [this.initialValues?.searchText || ''],
-      country: [this.initialValues?.country || '']
+      searchText: [this.initialValues?.searchText || '', Validators.required],
+      country: [this.initialValues?.country || '', Validators.required]
     });
   }
 
