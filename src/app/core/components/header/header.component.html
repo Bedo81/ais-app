@@ -1,0 +1,21 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <img src="assets/images/logo.webp" alt="Foodium Logo" style="height: 40px; margin-right: 10px;">
+    </ion-buttons>
+    <ion-title>Foodium</ion-title>
+    <ion-buttons slot="end">
+      <ion-label *ngIf="user">Signed in as {{ user.displayName }}</ion-label>
+      <ion-button routerLink="/tabs/cart" [disabled]="cartItemCount === 0">
+        <ion-icon name="cart-outline"></ion-icon>
+        <ion-badge *ngIf="cartItemCount > 0" color="danger">{{ cartItemCount }}</ion-badge>
+      </ion-button>
+      <ion-button *ngIf="user" (click)="handleSignOut()">
+        <ion-icon name="log-out-outline"></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="!user" routerLink="/signin">
+        <ion-icon name="person-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>

@@ -1,21 +1,21 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-import { Item } from '../../models/item.model';
-import { CartService } from '../../services/cart.service';
-import { ItemsService } from '../../services/items.service';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { Item } from '../../models/item.model';
+import { ItemsService } from '../../core/services/items.service';
+import { CartService } from '../../core/services/cart.service';
 
 @Component({
   selector: 'app-items',
-  templateUrl: './items.component.html',
-  styleUrls: ['./items.component.scss'],
+  templateUrl: './items.page.html',
+  styleUrls: ['./items.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, IonicModule]
+  imports: [CommonModule, IonicModule, FormsModule]
 })
-export class ItemsComponent implements OnInit {
+export class ItemsPage implements OnInit {
   items$: Observable<Item[]>;
   selectedCategory: string = 'food';
 
@@ -24,7 +24,7 @@ export class ItemsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.itemsService.fetchItems().subscribe();
+    this.itemsService.scheduleRefetch(60 * 60 * 1000); // Refetch every hour
   }
 
   handleCategoryChange(category: string | null | undefined | any) {
@@ -34,7 +34,7 @@ export class ItemsComponent implements OnInit {
   }
 
   addToCart(item: Item) {
-    this.cartService.addItem(item);
+    this.cartService.addToCart(item);
   }
 
   get filteredItems$(): Observable<Item[]> {
