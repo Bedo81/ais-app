@@ -74,7 +74,7 @@ export class CartPage implements OnInit, OnDestroy {
       status: 'active',
       createdAt: new Date(),
       directionsLeg: {}, // Empty object for now, replace with actual data if available
-      pickupTime: new Date().toISOString().split('T')[0] + 'T' + this.pickupTime.split('T')[1] // Today's date with selected time
+      pickupTime: new Date(new Date().toISOString().split('T')[0] + 'T' + this.pickupTime.split('T')[1]) // Today's date with selected time
     };
 
     this.apiService.sendOrder(order).subscribe({

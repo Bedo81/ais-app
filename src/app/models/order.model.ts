@@ -1,6 +1,7 @@
 import { Item } from './item.model';
 
 export interface Order {
+  id?: string;
   user: {
     uid: string;
     displayName: string;
@@ -10,6 +11,7 @@ export interface Order {
   total: number;
   status: string;
   createdAt: Date;
-  directionsLeg: any; // Define the correct type if available
-  pickupTime: string; // ISO string
+  pickupTime: Date;
+  directionsLeg: any;
+  [key: string]: any; // Allow additional properties
 }

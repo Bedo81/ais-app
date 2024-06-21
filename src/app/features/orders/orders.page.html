@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Orders</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-segment [(ngModel)]="sortByValue" (ngModelChange)="sortBy.next(sortByValue)">
+    <ion-segment-button value="createdAt">
+      <ion-label>Created At</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="pickupTime">
+      <ion-label>Pickup Time</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <ion-list>
+    <ion-item *ngFor="let order of sortedOrders$ | async" (click)="viewOrderDetails(order)">
+      <ion-label>
+        <h2>{{ order.user.displayName }}</h2>
+        <p>Created: {{ order.createdAt | date: 'shortTime' }}</p>
+        <p>Pickup: {{ order.pickupTime | date: 'shortTime' }}</p>
+        <p>Status: {{ order.status }}</p>
+      </ion-label>
+      <ion-button slot="end" (click)="updateStatus(order, 'preparing')" *ngIf="order.status === 'active'">Start Preparing</ion-button>
+      <ion-button slot="end" (click)="updateStatus(order, 'completed')" *ngIf="order.status === 'preparing'">Complete</ion-button>
+      <ion-button slot="end" color="danger" (click)="updateStatus(order, 'cancelled')">Cancel</ion-button>
+    </ion-item>
+  </ion-list>
+</ion-content>

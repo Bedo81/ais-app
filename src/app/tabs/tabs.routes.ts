@@ -1,3 +1,4 @@
+import { OrdersPage } from './../features/orders/orders.page';
 import { Routes } from '@angular/router';
 import { TabsPage } from './tabs.page';
 
@@ -25,6 +26,10 @@ export const routes: Routes = [
       {
         path: 'items',
         loadComponent: () => import('../features/items/items.page').then((m) => m.ItemsPage),
+      },
+      {
+        path: 'orders',
+        loadComponent: () => import('../features/orders/orders.page').then((m) => m.OrdersPage),
       },
       {
         path: '',
