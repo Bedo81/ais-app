@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
@@ -9,9 +9,10 @@ import { CartService } from '../../core/services/cart.service';
 import { Item } from '../../models/item.model';
 import { Order } from '../../models/order.model';
 import { CartItemsComponent } from './cart-items.component';
-import { firstValueFrom, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { firstValueFrom } from 'rxjs';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
   selector: 'app-cart-page',
   templateUrl: './cart.page.html',
@@ -19,9 +20,7 @@ import { takeUntil } from 'rxjs/operators';
   standalone: true,
   imports: [CommonModule, IonicModule, FormsModule, CartItemsComponent]
 })
-export class CartPage implements OnInit, OnDestroy {
-  private unsubscribe$ = new Subject<void>();
-
+export class CartPage implements OnInit {
   cart$ = this.cartService.cart$;
   cartTotal$ = this.cartService.cartTotal$;
   user: any;
@@ -35,15 +34,10 @@ export class CartPage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.authService.user$
-      .pipe(takeUntil(this.unsubscribe$))
+      .pipe(untilDestroyed(this))
       .subscribe(user => {
         this.user = user;
       });
-  }
-
-  ngOnDestroy() {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
   }
 
   removeFromCart(itemId: string) {
