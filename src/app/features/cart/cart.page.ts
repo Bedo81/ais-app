@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
@@ -6,7 +6,6 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { ApiService } from '../../core/services/api.service';
 import { CartService } from '../../core/services/cart.service';
-import { Item } from '../../models/item.model';
 import { Order } from '../../models/order.model';
 import { CartItemsComponent } from './cart-items.component';
 import { firstValueFrom } from 'rxjs';
@@ -17,10 +16,11 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
   selector: 'app-cart-page',
   templateUrl: './cart.page.html',
   styleUrls: ['./cart.page.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [CommonModule, IonicModule, FormsModule, CartItemsComponent]
 })
-export class CartPage implements OnInit {
+export class CartPage implements OnInit, OnDestroy {
   cart$ = this.cartService.cart$;
   cartTotal$ = this.cartService.cartTotal$;
   user: any;
@@ -38,6 +38,10 @@ export class CartPage implements OnInit {
       .subscribe(user => {
         this.user = user;
       });
+  }
+
+  ngOnDestroy() {
+    // This method is necessary for the untilDestroyed operator to work
   }
 
   removeFromCart(itemId: string) {
