@@ -24,13 +24,19 @@ export class CartPage implements OnInit, OnDestroy {
   cart$ = this.cartService.cart$;
   cartTotal$ = this.cartService.cartTotal$;
   user: any;
+  pickupTime: string;
 
   constructor(
     private authService: AuthService,
     private apiService: ApiService,
     private cartService: CartService,
     private router: Router
-  ) {}
+  ) {
+    // Set the initial pickup time to current time + 10 minutes
+    const currentTime = new Date();
+    currentTime.setMinutes(currentTime.getMinutes() + 10);
+    this.pickupTime = currentTime.toISOString().substring(0, 16); // Properly formatted for ion-datetime
+  }
 
   ngOnInit() {
     this.authService.user$
@@ -68,7 +74,7 @@ export class CartPage implements OnInit, OnDestroy {
       status: 'active',
       createdAt: new Date(),
       directionsLeg: {}, // Empty object for now, replace with actual data if available
-      pickupTime: new Date().toISOString() // Current date and time in ISO format
+      pickupTime: new Date().toISOString().split('T')[0] + 'T' + this.pickupTime.split('T')[1] // Today's date with selected time
     };
 
     this.apiService.sendOrder(order).subscribe({

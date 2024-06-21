@@ -10,5 +10,16 @@
     [cartTotal]="(cartTotal$ | async) ?? 0"
     (remove)="removeFromCart($event)"
   ></app-cart-items>
+  <ion-item>
+    <ion-label>Pickup Time</ion-label>
+    <ion-datetime
+      displayFormat="HH:mm"
+      pickerFormat="HH:mm"
+      [(ngModel)]="pickupTime"
+      presentation="time"
+      minuteValues="0,10,20,30,40,50"
+      hourValues="6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22"
+    ></ion-datetime>
+  </ion-item>
   <ion-button expand="block" (click)="handleOrder()" [disabled]="!(cart$ | async)?.length">Proceed to Order</ion-button>
 </ion-content>
