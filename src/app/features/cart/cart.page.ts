@@ -1,46 +1,49 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { CartService } from '../../core/services/cart.service';
 import { AuthService } from '../../core/services/auth.service';
 import { ApiService } from '../../core/services/api.service';
+import { CartService } from '../../core/services/cart.service';
 import { Item } from '../../models/item.model';
 import { Order } from '../../models/order.model';
+import { CartItemsComponent } from './cart-items.component';
+import { firstValueFrom, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-cart',
+  selector: 'app-cart-page',
   templateUrl: './cart.page.html',
   styleUrls: ['./cart.page.scss'],
   standalone: true,
-  imports: [CommonModule, IonicModule, FormsModule]
+  imports: [CommonModule, IonicModule, FormsModule, CartItemsComponent]
 })
-export class CartPage implements OnInit {
-  cart: Item[] = [];
-  cartTotal: number = 0;
+export class CartPage implements OnInit, OnDestroy {
+  private unsubscribe$ = new Subject<void>();
+
+  cart$ = this.cartService.cart$;
+  cartTotal$ = this.cartService.cartTotal$;
   user: any;
 
   constructor(
-    private cartService: CartService,
     private authService: AuthService,
     private apiService: ApiService,
+    private cartService: CartService,
     private router: Router
   ) {}
 
   ngOnInit() {
-    this.cartService.cart$.subscribe(cart => {
-      this.cart = cart;
-      this.cartTotal = this.calculateCartTotal(cart);
-    });
-
-    this.authService.user$.subscribe(user => {
-      this.user = user;
-    });
+    this.authService.user$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(user => {
+        this.user = user;
+      });
   }
 
-  calculateCartTotal(cart: Item[]): number {
-    return cart.reduce((total, item) => total + item.price * (item.quantity || 1), 0);
+  ngOnDestroy() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   removeFromCart(itemId: string) {
@@ -53,30 +56,33 @@ export class CartPage implements OnInit {
       return;
     }
 
+    const cart = await firstValueFrom(this.cart$) ?? [];
+    const cartTotal = await firstValueFrom(this.cartTotal$) ?? 0;
+
     const order: Order = {
       user: {
         uid: this.user.uid,
         displayName: this.user.displayName,
         email: this.user.email,
       },
-      items: this.cart,
-      total: this.cartTotal,
+      items: cart,
+      total: cartTotal,
       status: 'active',
       createdAt: new Date(),
       directionsLeg: {}, // Empty object for now, replace with actual data if available
       pickupTime: new Date().toISOString() // Current date and time in ISO format
     };
 
-    this.apiService.sendOrder(order).subscribe(
-      () => {
+    this.apiService.sendOrder(order).subscribe({
+      next: () => {
         // Handle successful order
         console.log('Order sent successfully');
         this.cartService.clearCart();
         this.router.navigate(['/orders']);
       },
-      (error) => {
+      error: (error) => {
         console.error('There was a problem sending the order:', error);
       }
-    );
+    });
   }
 }

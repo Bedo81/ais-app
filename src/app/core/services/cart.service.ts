@@ -24,7 +24,7 @@ export class CartService {
   }
 
   private calculateCartTotal(cart: Item[]): number {
-    return cart.reduce((total, item) => total + item.price * (item.quantity || 0), 0);
+    return cart.reduce((total, item) => total + item.price * (item.quantity || 1), 0);
   }
 
   addToCart(item: Item) {

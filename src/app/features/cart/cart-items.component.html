@@ -1,0 +1,9 @@
+<ion-list>
+  <ion-item *ngFor="let item of cart">
+    {{ item.name }} - ${{ item.price.toFixed(2) }} x {{ item.quantity }} = ${{ (item.price * item.quantity).toFixed(2) }}
+    <ion-button slot="end" (click)="removeFromCart(item.id)">Remove</ion-button>
+  </ion-item>
+</ion-list>
+<ion-item>
+  <ion-label>Total: ${{ cartTotal.toFixed(2) }}</ion-label>
+</ion-item>
