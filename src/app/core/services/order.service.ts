@@ -28,6 +28,10 @@ export class OrderService {
   //   );
   // }
 
+  getOrdersForUser(uid: string): Observable<Order[]> {
+    return this.apiService.getOrdersForUser(uid);
+  }
+
   updateOrderStatus(orderId: string, status: string): Observable<any> {
     return this.apiService.updateOrderStatus(orderId, status).pipe(
       map(() => {

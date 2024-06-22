@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>My Orders</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-loading *ngIf="isLoading" isOpen="true" message="Loading..."></ion-loading>
+  <ion-alert *ngIf="error" isOpen="true" [message]="error.message || 'An error occurred'" buttons="['OK']"></ion-alert>
+
+  <ion-list *ngIf="!isLoading && !error">
+    <ion-item *ngFor="let order of orders$ | async">
+      <ion-label>
+        <h2>Order ID: {{ order.id }}</h2>
+        <h3>Status: {{ order.status }}</h3>
+        <p>Estimated Pickup: {{ order.pickupTime | date: 'shortTime' }}</p>
+        <p>Total: ${{ order.total.toFixed(2) }}</p>
+        <ion-list>
+          <ion-item *ngFor="let item of order.items">
+            <ion-label>
+              <h2>{{ item.name }}</h2>
+              <p>Quantity: {{ item.quantity }}</p>
+              <p>Price: ${{ item.price.toFixed(2) }}</p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>

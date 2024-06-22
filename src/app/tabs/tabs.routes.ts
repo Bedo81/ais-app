@@ -1,4 +1,3 @@
-import { OrdersPage } from './../features/orders/orders.page';
 import { Routes } from '@angular/router';
 import { TabsPage } from './tabs.page';
 
@@ -18,6 +17,10 @@ export const routes: Routes = [
       {
         path: 'tab3',
         loadComponent: () => import('../tab3/tab3.page').then((m) => m.Tab3Page),
+      },
+      {
+        path: 'user-orders',
+        loadComponent: () => import('../features/user-orders/user-orders.page').then(m => m.UserOrdersPage),
       },
       {
         path: 'cart',
