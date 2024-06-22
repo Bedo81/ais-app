@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, map } from 'rxjs';
 import { Order } from '../../models/order.model';
 import { ApiService } from './api.service';
-import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -11,9 +10,7 @@ export class OrderService {
   private ordersSubject = new BehaviorSubject<Order[]>([]);
   orders$ = this.ordersSubject.asObservable();
 
-  constructor(private apiService: ApiService) {
-    this.fetchOrders();
-  }
+  constructor(private apiService: ApiService) {}
 
   fetchOrders() {
     this.apiService.getActiveAndPreparingOrders().subscribe(
@@ -22,11 +19,9 @@ export class OrderService {
     );
   }
 
-  // getActiveOrders(): Observable<Order[]> {
-  //   return this.orders$.pipe(
-  //     map(orders => orders.filter(order => order.status === 'active' || order.status === 'preparing'))
-  //   );
-  // }
+  getActiveOrders(): Observable<Order[]> {
+    return this.orders$;
+  }
 
   getOrdersForUser(uid: string): Observable<Order[]> {
     return this.apiService.getOrdersForUser(uid);

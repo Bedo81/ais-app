@@ -27,6 +27,8 @@ export class OrdersPage implements OnInit {
   constructor(private orderService: OrderService) {}
 
   ngOnInit() {
+    this.orderService.fetchOrders(); // Ensure orders are fetched when the component initializes
+
     this.sortedOrders$ = combineLatest([this.orders$, this.sortBy]).pipe(
       map(([orders, sortBy]) => this.sortOrders(orders, sortBy))
     );
